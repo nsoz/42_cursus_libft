@@ -6,98 +6,84 @@
 /*   By: muoz <muoz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 14:42:29 by muoz              #+#    #+#             */
-/*   Updated: 2023/07/12 19:33:09 by muoz             ###   ########.fr       */
+/*   Updated: 2023/07/15 20:26:37 by muoz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	sign_check(int n)
+char	*process(char *str, long ln, long check, long len)
 {
-	if (n < 0)
-		return (1);
-	else
-		return (0);
+	char	ln_mode;
+	long	len_cover;
+
+	len_cover = len;
+	if (check == 1)
+		str[0] = '-';
+	while (ln)
+	{
+		ln_mode = (ln % 10 + '0');
+		str[len] = ln_mode;
+		len--;
+		ln = ln / 10;
+	}
+	str[len_cover + 1] = '\0';
+	return (str);
 }
 
-int	divisibility(int n)
+long	divisibility(long ln, long check)
 {
-	int		div;
-	int		a;
+	long	div;
 
-	div = 1;
-	if (n < 0)
-		a = -n;
-	else
-		a = n;
-	while (a >= 10)
+	div = 0;
+	if (ln == 0)
+		return (1);
+	if (check == 1)
+		div++;
+	while (ln > 0)
 	{
-		a = a / 10;
+		ln = ln / 10;
 		div++;
 	}
 	return (div);
 }
 
-char	*process(char *prolen, int check, int prolen_index, int n)
+long	sign_check(long ln)
 {
-	char	dig_mod;
-
-	if (check == 1)
+	if (ln < 0)
 	{
-		prolen[0] = '-';
-		while (prolen_index > 0)
-		{
-			dig_mod = (n % 10 + '0');
-			prolen[prolen_index] = dig_mod;
-			n = (n / 10);
-			prolen_index--;
-		}
+		return (1);
 	}
-	else
-	{
-		while (prolen_index >= 0 && n >= 0)
-		{
-			dig_mod = (n % 10 + '0');
-			prolen[prolen_index] = dig_mod;
-			n = (n / 10);
-			prolen_index--;
-		}
-	}
-	return (prolen);
+	return (0);
 }
 
-char	*preliminary(char *prolen, int check, int prolen_index, int n)
+long	sign_change(long ln, int check)
 {
-	if (n == -2147483648)
-	{
-		prolen[0] = '-';
-		n = n * -1;
-		check = 0;
-		process(prolen, check, prolen_index -1, n);
-	}
-	process(prolen, check, prolen_index, n);
-	prolen[prolen_index + 1] = '\0';
-	return (prolen);
+	if (check == 1)
+		ln *= -1;
+	return (ln);
 }
 
 char	*ft_itoa(int n)
 {
-	int		digits;
+	long	ln;
 	char	*istr;
-	int		check;
-	int		cdigits;
+	long	digit;
+	long	check;
 
-	check = sign_check(n);
-	digits = divisibility(n);
-	if (check == 1)
-	{
-		n = n * -1;
-		digits = digits + 1;
-	}
-	istr = (char *)malloc((digits + 1) * sizeof(char));
+	ln = n;
+	check = sign_check(ln);
+	ln = sign_change(ln, check);
+	digit = divisibility(ln, check);
+	istr = malloc((digit + 1) * sizeof(char));
 	if (!istr)
 		return (NULL);
-	cdigits = digits - 1;
-	istr = preliminary(istr, check, cdigits, n);
+	if (ln == 0)
+	{
+		istr[0] = '0';
+		istr[1] = '\0';
+	}
+	else
+		process(istr, ln, check, (digit - 1));
 	return (istr);
 }

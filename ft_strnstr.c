@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_striteri.c                                      :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: muoz <muoz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/12 15:51:35 by muoz              #+#    #+#             */
-/*   Updated: 2023/07/15 13:28:17 by muoz             ###   ########.fr       */
+/*   Created: 2023/07/07 15:25:57 by muoz              #+#    #+#             */
+/*   Updated: 2023/07/09 15:05:20 by muoz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+char	*ft_strnstr(const char *str, const char *to_find, size_t len)
 {
-	unsigned int	index;
+	size_t		position;
 
-	index = 0;
-	while (s[index] != '\0')
+	if (*to_find == '\0')
+		return ((char *)str);
+	position = ft_strlen((char *)to_find);
+	while (*str != '\0' && len-- >= position)
 	{
-		f(index, &s[index]);
-		index++;
+		if (*str == *to_find && ft_memcmp(str, to_find, position) == 0)
+			return ((char *)str);
+		str++;
 	}
+	return (NULL);
 }
